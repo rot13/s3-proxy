@@ -5,10 +5,11 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"net/http"
 )
 
 type S3Proxy interface {
-	Get(key string) (*s3.GetObjectOutput, error)
+	Get(key string, header http.Header) (*s3.GetObjectOutput, error)
 	GetWebsiteConfig() (*s3.GetBucketWebsiteOutput, error)
 }
 
@@ -29,7 +30,7 @@ func NewS3Proxy(key, secret, region, bucket string) S3Proxy {
 	}
 }
 
-func (p *RealS3Proxy) Get(key string) (*s3.GetObjectOutput, error) {
+func (p *RealS3Proxy) Get(key string, header http.Header) (*s3.GetObjectOutput, error) {
 	req := &s3.GetObjectInput{
 		Bucket: aws.String(p.bucket),
 		Key:    aws.String(key),

@@ -99,7 +99,7 @@ func NewProxyHandler(proxy S3Proxy, prefix string) http.HandlerFunc {
 			path = "/" + prefix + path
 		}
 
-		obj, err := proxy.Get(path)
+		obj, err := proxy.Get(path, r.Header)
 		if err != nil {
 			if awsErr, ok := err.(awserr.Error); ok {
 				if reqErr, ok := err.(awserr.RequestFailure); ok {

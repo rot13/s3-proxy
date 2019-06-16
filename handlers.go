@@ -129,6 +129,9 @@ func NewProxyHandler(proxy S3Proxy, prefix string) http.HandlerFunc {
 		setHeader(w, "ETag", s2s(obj.ETag))
 		setHeader(w, "Expires", s2s(obj.Expires))
 		setHeader(w, "Last-Modified", t2s(obj.LastModified))
+		if obj.ContentRange != nil {
+			w.WriteHeader(206)
+		}
 
 		io.Copy(w, obj.Body)
 	}

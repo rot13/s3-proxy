@@ -32,9 +32,11 @@ func NewS3Proxy(key, secret, region, bucket string) S3Proxy {
 
 func (p *RealS3Proxy) Get(key string, header http.Header) (*s3.GetObjectOutput, error) {
 	req := &s3.GetObjectInput{
-		Bucket: aws.String(p.bucket),
-		Key:    aws.String(key),
-		Range:  aws.String(header.Get("Range")),
+		Bucket:      aws.String(p.bucket),
+		Key:         aws.String(key),
+		Range:       aws.String(header.Get("Range")),
+		IfMatch:     aws.String(header.Get("If-Match")),
+		IfNoneMatch: aws.String(header.Get("If-None-Match")),
 	}
 
 	return p.s3.GetObject(req)

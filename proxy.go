@@ -34,6 +34,7 @@ func (p *RealS3Proxy) Get(key string, header http.Header) (*s3.GetObjectOutput, 
 	req := &s3.GetObjectInput{
 		Bucket: aws.String(p.bucket),
 		Key:    aws.String(key),
+		Range:  aws.String(header.Get("Range")),
 	}
 
 	return p.s3.GetObject(req)

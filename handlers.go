@@ -102,6 +102,10 @@ func NewProxyHandler(proxy S3Proxy, prefix string) http.HandlerFunc {
 		obj, err := proxy.Get(path)
 		if err != nil {
 			if awsErr, ok := err.(awserr.Error); ok {
+				if reqErr, ok := err.(awserr.RequestFailure); ok {
+					http.Error(w, reqErr.Message(), reqErr.StatusCode())
+					return
+				}
 				switch awsErr.Code() {
 				case s3.ErrCodeNoSuchBucket, s3.ErrCodeNoSuchKey:
 					http.Error(w, err.Error(), http.StatusNotFound)
